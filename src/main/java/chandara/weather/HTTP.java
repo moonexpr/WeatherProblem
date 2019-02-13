@@ -15,16 +15,23 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 /**
  * HTTP
  *
- * Usage:
+ * Usage: Static helper class containing HTTP utilities.
  *
  * @author John Chandara <chandara@iastate.edu>
  * @license MIT License (X11 Variant)
- * @category Educational
  * @version 190211
  *
  */
 public class HTTP {
 
+    /**
+     * Generates a url based on base url and paramaters.
+     *
+     * @param strBaseURL
+     * @param mapParams
+     * @return formatted url
+     * @throws UnsupportedEncodingException
+     */
     public static String URL (String strBaseURL, Map<String, String> mapParams) throws UnsupportedEncodingException {
         if (mapParams.size () > 0) {
             strBaseURL += "?";
@@ -39,6 +46,13 @@ public class HTTP {
         return strBaseURL;
     }
 
+    /**
+     * Sends HTTP GET request and returns the response.
+     *
+     * @param url
+     * @return httpresponse
+     * @throws UnirestException
+     */
     public static HttpResponse<JsonNode> Fetch (String url) throws UnirestException {
         return Unirest.get (url).asJson ();
     }

@@ -10,7 +10,8 @@ import org.json.JSONObject;
 /**
  * WeatherAPI
  *
- * Usage:
+ * Usage: Local implementation of OpenWeatherMap's CurrentWeather API intended
+ * for accessor use.
  *
  * @author John Chandara <chandara@iastate.edu>
  * @license MIT License (X11 Variant)
@@ -73,6 +74,11 @@ public class CurrentWeatherAPI implements API {
         }
     }
 
+    /**
+     * Returns if the payload is in a valid format.
+     *
+     * @return Is valid format
+     */
     private boolean IsValid () {
         final int code = this.m_jsonDataPrimary.getInt ("cod");
         final boolean bNoMessage = this.m_jsonDataPrimary.isNull ("message");
@@ -80,27 +86,56 @@ public class CurrentWeatherAPI implements API {
         return code == 200 && bNoMessage;
     }
 
+    /**
+     * Called on construction. Registers JSON objects from main body.
+     *
+     */
     private void RegisterDataStore () {
         for (final String service : DATA_STORE)
             this.m_arrDataStore.put (service, this.m_jsonDataPrimary.getJSONObject (service));
     }
 
+    /**
+     * Returns coordinate information JSON object.
+     *
+     * @return JSONObject coord
+     */
     public JSONObject GetCoordinates () {
         return this.m_arrDataStore.get ("coord");
     }
 
+    /**
+     * Returns general information JSON object.
+     *
+     * @return JSONObject main
+     */
     public JSONObject GetGeneral () {
         return this.m_arrDataStore.get ("main");
     }
 
+    /**
+     * Returns wind information JSON object.
+     *
+     * @return JSONObject wind
+     */
     public JSONObject GetWind () {
         return this.m_arrDataStore.get ("wind");
     }
 
+    /**
+     * Returns cloud information JSON object.
+     *
+     * @return JSONObject clouds
+     */
     public JSONObject GetClouds () {
         return this.m_arrDataStore.get ("clouds");
     }
 
+    /**
+     * Returns system information JSON object.
+     *
+     * @return JSONObject sys
+     */
     public JSONObject GetSystemInformation () {
         return this.m_arrDataStore.get ("sys");
     }

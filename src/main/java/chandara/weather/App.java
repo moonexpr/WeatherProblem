@@ -13,25 +13,45 @@ import chandara.api.CurrentWeatherAPI;
 import chandara.api.Responder;
 import chandara.api.StatusResponder;
 
+/**
+ * App
+ *
+ * Usage: A simple application which returns the current temperature of a city
+ * in fahrenheit.
+ *
+ * @author John Chandara <chandara@iastate.edu>
+ * @license MIT License (X11 Variant)
+ * @version 190212
+ *
+ */
 public class App {
-    private final static String BASE_URL      = "https://api.openweathermap.org/data/2.5/";
-    private final static String BASE_ENDPOINT = "weather";
-    private final static String API_KEY       = "";
-
-    private static Scanner      scanner;
+    private static Scanner scanner;
 
     public static void main (String[] args) throws UnirestException, UnsupportedEncodingException {
         if (scanner == null)
             scanner = new Scanner (System.in);
 
-        final Map<String, String> mapParams = prompt ();
+        System.out.print ("Please enter your location: ");
+
+        final Map<String, String> mapParams = new HashMap<> ();
+        mapParams.put ("q", scanner.nextLine ());
+        mapParams.put ("appid", ConfigStore.API_KEY);
 
         query (mapParams, args);
     }
 
-    private static void query (Map<String, String> mapParams, String[] args)
+    /**
+     * Fetches the payload and attempts to use it with our local implementation.
+     * Uses StatusResponder in order to figure out what to do next.
+     *
+     * @param mapParams
+     * @param args
+     * @throws UnsupportedEncodingException
+     * @throws UnirestException
+     */
+    public static void query (Map<String, String> mapParams, String[] args)
             throws UnsupportedEncodingException, UnirestException {
-        final Responder responder = new Responder (BASE_ENDPOINT, fetch (mapParams));
+        final Responder responder = new Responder (ConfigStore.BASE_ENDPOINT, fetch (mapParams));
         final StatusResponder statusResponder = responder.GetNextAction ();
 
         switch (statusResponder) {
@@ -58,28 +78,32 @@ public class App {
      * @param iKelvin
      * @return Fahrenheit representation
      */
-    private static double ConvertUnits (double iKelvin) {
+    public static double ConvertUnits (double iKelvin) {
         return (iKelvin - 273.15) * 9 / 5 + 32;
     }
 
-    private static void respond (CurrentWeatherAPI api) {
+    /**
+     * Called when the payload has successfully been resolved with our local
+     * implementation.
+     *
+     * @param api
+     */
+    public static void respond (CurrentWeatherAPI api) {
         final double dTemp = ConvertUnits (api.GetGeneral ().getDouble ("temp"));
         System.out.printf ("Current Temperature: %.2f F", dTemp);
     }
 
-    private static Map<String, String> prompt () {
-        System.out.print ("Please enter your location: ");
-
-        final Map<String, String> mapParams = new HashMap<> ();
-        mapParams.put ("q", scanner.nextLine ());
-        mapParams.put ("appid", API_KEY);
-
-        return mapParams;
-    }
-
+    /**
+     * Creates GET request to grab the payload using given paramaters.
+     *
+     * @param mapParams
+     * @return HttpReponse
+     * @throws UnsupportedEncodingException
+     * @throws UnirestException
+     */
     public static HttpResponse<JsonNode> fetch (Map<String, String> mapParams)
             throws UnsupportedEncodingException, UnirestException {
-        final String url = HTTP.URL (BASE_URL + BASE_ENDPOINT, mapParams);
+        final String url = HTTP.URL (ConfigStore.BASE_URL + ConfigStore.BASE_ENDPOINT, mapParams);
 
         return HTTP.Fetch (url);
     }

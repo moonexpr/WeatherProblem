@@ -6,7 +6,7 @@ package chandara.api;
 /**
  * API
  *
- * Usage:
+ * Usage: Specified how to implement a weather API.
  *
  * @author John Chandara <chandara@iastate.edu>
  * @license MIT License (X11 Variant)

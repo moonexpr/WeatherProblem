@@ -20,7 +20,7 @@ import com.mashape.unirest.http.JsonNode;
  *
  */
 public class Responder {
-    ;
+
     private API     m_apiEndpoint = null;
     private boolean m_bFailed     = false;
 
@@ -40,6 +40,11 @@ public class Responder {
         }
     }
 
+    /**
+     * Delegate to the primary API in respect to the next action.
+     *
+     * @return StatusResponder
+     */
     public StatusResponder GetNextAction () {
         if (this.m_bFailed)
             return StatusResponder.RESTART;
@@ -47,6 +52,11 @@ public class Responder {
         return this.m_apiEndpoint.GetNextAction ();
     }
 
+    /**
+     * Returns a primary API, based on endpoint.
+     *
+     * @return API
+     */
     public API GetAPI () {
         return this.m_apiEndpoint;
     }
