@@ -17,5 +17,5 @@ package chandara.weather;
 public class ConfigStore {
     public final static String BASE_URL      = "https://api.openweathermap.org/data/2.5/";
     public final static String BASE_ENDPOINT = "weather";
-    public final static String API_KEY       = "";
+    public final static String API_KEY       = "169b13031c8af26e29cd3b65bfd27241";
 }
